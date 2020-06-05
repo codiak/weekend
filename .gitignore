@@ -1,5 +1,6 @@
 /build/
 /dist/
+/ui/node_modules/
 *.pyc
 *.egg-info
 *.swo
