@@ -1,0 +1,3 @@
+# Server requirements
+bottle==0.12.18
+wit==5.1.0

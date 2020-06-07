@@ -26,6 +26,12 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ## Running the Server
 
+Instal requirements from /server:
+
+```bash
+pip install -r requirements.txt
+```
+
 To run the command prompt and send messages to Wit, use:
 
 ```bash

@@ -1,8 +1,23 @@
+import React, { useState } from "react";
 import Head from 'next/head'
 import Header from '@components/Header'
 import Footer from '@components/Footer'
 
 export default function Home() {
+  const [message, setMessage] = useState('');
+
+  function sendMessage(text) {
+    fetch('/api/message', {
+      method: 'POST',
+      body: JSON.stringify({message: text})
+    })
+    .then(res => {
+      console.log(res);
+    }, err => {
+      console.error(err);
+    });
+  }
+
   return (
     <main className="container">
       <Head>
@@ -15,7 +30,8 @@ export default function Home() {
       </div>
       <div className="contents">
         <p>
-          Stuff goes here!
+          <input type="text" onChange={e => setMessage(e.target.value)}/>
+          <button onClick={e => sendMessage(message)}>Send</button>
         </p>
       </div>
       <Footer />

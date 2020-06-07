@@ -1,5 +1,7 @@
 import sys
 from wit import Wit
+from bottle import Bottle, request, route, run
+
 
 if len(sys.argv) != 2:
     print('usage: python ' + sys.argv[0] + ' <wit-token>')
@@ -33,6 +35,21 @@ def handle_message(response):
     else:
         return 'Ummm... maybe I can help you with your house?'
 
+@route('/message', method='POST')
+def message_post():
+    text = request.json
+    if text:
+        response = client.message(msg=text) # , context={'session_id':1}
+        reply = handle_message(response)
+        return {'reply': reply}
+    else:
+        return 'ERROR: "message" property required'
+
 
 client = Wit(access_token=access_token)
-client.interactive(handle_message=handle_message)
+# client.interactive(handle_message=handle_message)
+
+
+if __name__ == '__main__':
+    # Run Server
+    run(host='localhost', port=3042, debug=True)
