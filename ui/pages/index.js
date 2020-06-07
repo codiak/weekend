@@ -81,6 +81,7 @@ export default function Home() {
           position: relative;
           padding: 2rem;
           flex-grow: 1;
+          padding-bottom: 100px;
         }
 
         .inputWrap {

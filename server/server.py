@@ -1,4 +1,5 @@
 import sys
+import random
 from wit import Wit
 from bottle import Bottle, request, route, run
 
@@ -18,13 +19,12 @@ def first_value(obj, key):
     return val
 
 def handle_message(response):
-    # print(response)
+    print(response)
     intents = response['intents']
     entities = response['entities']
     intent = intents[0]
     task = first_value(entities, 'house_task:house_task')
     date = first_value(entities, 'wit$datetime:datetime')
-
     if intent['name'] == 'create_reminder':
         if not task:
             return 'Were you trying to create a reminder?'
@@ -32,14 +32,18 @@ def handle_message(response):
         if date:
             reply = reply + f" on " + date
         return reply
+    elif intent['name'] == 'greeting':
+        greetings = ['Hey! How is home?', 'Hello 👋', 'Hi!']
+        return random.choice(greetings)
     else:
         return 'Ummm... maybe I can help you with your house?'
 
 @route('/message', method='POST')
 def message_post():
-    text = request.json
-    if text:
-        response = client.message(msg=text) # , context={'session_id':1}
+    body = request.json
+    message = body.get('message')
+    if message:
+        response = client.message(message) # , context={'session_id':1}
         reply = handle_message(response)
         return {'reply': reply}
     else:
