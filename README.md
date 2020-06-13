@@ -9,19 +9,34 @@ Before running, install dependencies from /ui:
 
 ```bash
 npm install
-# or
-yarn install
 ```
+
+You will also need the following global dependencies:
+
+```bash
+npm install -g serverless
+```
+
+And either configure serverless with AWS keys or add a ".env" file to /ui.
 
 Running dev:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
+
+
+## Deploying the UI
+
+If you have serverless configured simple run:
+
+```bash
+serverless
+```
+
+In the /ui folder.
 
 
 ## Running the Server
@@ -43,3 +58,4 @@ And try a command like:
 ```
 Remind me to stain the fence next week
 ```
+

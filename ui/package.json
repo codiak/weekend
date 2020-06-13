@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export": "next export"
+    "export": "next export",
+    "deploy": "next build && sls deploy"
   },
   "dependencies": {
     "antd": "^4.3.3",
@@ -14,5 +15,8 @@
     "next": "9.4.0",
     "react": "16.13.1",
     "react-dom": "16.13.1"
+  },
+  "devDependencies": {
+    "serverless-next.js": "^1.13.0"
   }
 }

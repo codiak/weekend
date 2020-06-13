@@ -1,0 +1,14 @@
+name: wkend-next
+stage: dev
+
+wkendNext:
+  component: serverless-next.js
+  inputs:
+    region: us-east-2
+    bucketName: ${name}-${stage}
+    timeout:
+      defaultLambda: 20
+      apiLambda: 15
+    publicDirectoryCache:
+      value: public, max-age=7200
+      test: /\.(gif|jpe?g|png|txt|xml)$/i

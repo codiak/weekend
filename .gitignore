@@ -1,7 +1,16 @@
-/build/
-/dist/
-/ui/node_modules/
-/ui/.next/
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+.serverless_nextjs
+.env
+.next
+
+# Build folders
+/ui/build/
+/ui/dist/
 *.pyc
 *.egg-info
 *.swo
