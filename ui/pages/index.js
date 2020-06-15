@@ -3,14 +3,20 @@ import Head from 'next/head'
 import Header from '@components/Header'
 import Footer from '@components/Footer'
 import classNames from 'classnames'
-import { Input } from 'antd';
+import { Button, Input } from 'antd';
 
 const { Search } = Input;
 
 
-export default function Home() {
+function Home({home}) {
   const [draft, setDraft] = useState('');
   const [messages, setMessages] = useState([]);
+  const [pendingHome] = useState(home);
+
+  // Jerry-rig kicking things off
+  if (!home.name && messages.length === 0) {
+    sendMessage('Get started!');
+  }
 
   async function sendMessage(text) {
     const res = await fetch('/api/message', {
@@ -32,6 +38,7 @@ export default function Home() {
     let updatedMessages = messages.slice()
     updatedMessages = updatedMessages.concat(messageObj);
     setMessages(updatedMessages);
+    setDraft('');
   }
 
   return (
@@ -42,7 +49,15 @@ export default function Home() {
       </Head>
       <Header />
       <div className="sidebar">
-        Thing!
+        <div className="mb-1">
+          <Button type="primary">Assistant</Button>
+        </div>
+        <div className="mb-1">
+          <Button>My House</Button>
+        </div>
+        <div className="mb-1">
+          <Button>Maintenance</Button>
+        </div>
       </div>
       <div className="contents">
         {messages.map(message => {
@@ -52,8 +67,10 @@ export default function Home() {
         })}
         <div className="inputWrap">
           <Search placeholder="What's up?"
+            value={draft}
             enterButton="Send"
             size="large"
+            onChange={e => setDraft(e.value)}
             onSearch={value => sendMessage(value)}/>
         </div>
       </div>
@@ -96,6 +113,10 @@ export default function Home() {
         input[type="text"] {
           height: 2em;
           line-height: px;
+        }
+
+        .mb-1 {
+          margin-bottom: 1em;
         }
 
         .input--btn {
@@ -145,3 +166,20 @@ export default function Home() {
     </main>
   )
 }
+
+export async function getStaticProps(context) {
+  let home = { name: null };
+  // const res = await fetch('http://localhost:3000/api/home', {
+  //   method: 'GET'
+  // });
+  // if (res.ok) {
+  //   let data = await res.json();
+  //   home = data;
+  // }
+
+  return {
+    props: { home },
+  }
+}
+
+export default Home;
