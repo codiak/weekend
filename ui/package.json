@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "export": "next export",
-    "deploy": "next build && sls deploy"
+    "deploy": "next build && sls --component=wkendNext deploy"
   },
   "dependencies": {
     "antd": "^4.3.3",
