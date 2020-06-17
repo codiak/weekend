@@ -4,14 +4,23 @@ import Header from '@components/Header'
 import Footer from '@components/Footer'
 import classNames from 'classnames'
 import { Button, Input } from 'antd';
+import { gql } from "apollo-boost";
+import ApolloClient from 'apollo-boost';
 
+const client = new ApolloClient({
+  uri: 'http://ec2-52-86-111-85.compute-1.amazonaws.com:8080/v1/graphql',
+  headers: {
+    'x-hasura-admin-secret': process.env.X_HASURA_ADMIN_SECRET
+  }
+});
 const { Search } = Input;
 
 
-function Home({home}) {
+function Home({homes}) {
+  console.log(homes);
   const [draft, setDraft] = useState('');
   const [messages, setMessages] = useState([]);
-  const [pendingHome] = useState(home);
+  const [home] = useState(homes[0] || {});
 
   // Jerry-rig kicking things off
   if (!home.name && messages.length === 0) {
@@ -53,7 +62,7 @@ function Home({home}) {
           <Button type="primary">Assistant</Button>
         </div>
         <div className="mb-1">
-          <Button>My House</Button>
+          <Button>{home.name || 'My House'}</Button>
         </div>
         <div className="mb-1">
           <Button>Maintenance</Button>
@@ -168,17 +177,24 @@ function Home({home}) {
 }
 
 export async function getStaticProps(context) {
-  let home = { name: null };
-  // const res = await fetch('http://localhost:3000/api/home', {
-  //   method: 'GET'
-  // });
-  // if (res.ok) {
-  //   let data = await res.json();
-  //   home = data;
-  // }
+  let homes = [{ name: null }];
+  let {data} = await client
+    .query({
+      query: gql`
+        {
+          test_homes(where: {owner_name: {_eq: "cody"}}) {
+            id
+            name
+            owner_name
+            built_date
+          }
+        }
+      `
+    });
+  homes = data.test_homes;
 
   return {
-    props: { home },
+    props: { homes },
   }
 }
 
