@@ -12,14 +12,17 @@ export default function Header({ user, loading }) {
         tags={<Tag color="green">Alpha</Tag>}
         extra={
           !loading && user ? (
-            <Button
-              key="1"
-              onClick={() => {
-                router.push("/api/logout");
-              }}
-            >
-              Logout
-            </Button>
+            <>
+              <b>{user.name}</b>
+              <Button
+                key="1"
+                onClick={() => {
+                  router.push("/api/logout");
+                }}
+              >
+                Logout
+              </Button>
+            </>
           ) : (
             <Button
               key="1"
