@@ -83,9 +83,8 @@ export default function Record({ pushNewMessages }) {
 
   async function sendRecording(audioBlob) {
     let form = new FormData();
-    // form.append('name', 'speech.ogg');
     form.append('upload', audioBlob, 'speech.ogg');
-    const res = await fetch('/api/speech', {
+    const res = await fetch('/proxy/speech', {
       method: 'POST',
       body: form
     });

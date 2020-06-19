@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import Head from "next/head";
 import Header from "@components/Header";
 import Footer from "@components/Footer";
-import Record from "@components/Record";
-import classNames from "classnames";
-import { Button, Input } from "antd";
+import Messenger from "@components/Messenger";
+import Sidebar from "@components/Sidebar";
 import { gql } from "apollo-boost";
 import ApolloClient from "apollo-boost";
 import { useFetchUser } from "libs/user";
@@ -15,58 +14,10 @@ const client = new ApolloClient({
     "x-hasura-admin-secret": process.env.X_HASURA_ADMIN_SECRET,
   },
 });
-const { Search } = Input;
 
 function Home({ homes }) {
   const { user, loading } = useFetchUser();
-  console.log(homes);
-  const [draft, setDraft] = useState("");
-  const [messages, setMessages] = useState([]);
   const [home] = useState(homes[0] || {});
-  var recordDisplay = "";
-
-  // Jerry-rig kicking things off
-  if (!home.name && messages.length === 0) {
-    sendMessage("Get started!");
-  }
-
-  async function sendMessage(text) {
-    const res = await fetch("/api/message", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ message: text }),
-    });
-    if (res.ok) {
-      let data = await res.json();
-      pushNewMessages([
-        { from: "user", text: text, date: Date.now() },
-        { from: "weekend", text: data.reply, date: Date.now() },
-      ]);
-    } else {
-      alert("Error sending message!");
-    }
-  }
-
-  function pushNewMessages(messageObj) {
-    let updatedMessages = messages.slice();
-    updatedMessages = updatedMessages.concat(messageObj);
-    setMessages(updatedMessages);
-    setDraft("");
-    if (process.browser && messageObj[1]) {
-      var synth = window.speechSynthesis;
-      var utterThis = new SpeechSynthesisUtterance(messageObj[1].text);
-      synth.speak(utterThis);
-    }
-  }
-
-  /* Only display record button client-side */
-  if (process.browser) {
-    recordDisplay = (
-      <Record pushNewMessages={(msgObj) => pushNewMessages(msgObj)} />
-    );
-  }
 
   return (
     <main className="container">
@@ -85,43 +36,8 @@ function Home({ homes }) {
 
       {user && (
         <>
-          <div className="sidebar">
-            <div className="mb-1">
-              <Button type="primary">Assistant</Button>
-            </div>
-            <div className="mb-1">
-              <Button>{home.name || "My House"}</Button>
-            </div>
-            <div className="mb-1">
-              <Button>Maintenance</Button>
-            </div>
-          </div>
-          <div className="contents">
-            {messages.map((message) => {
-              return (
-                <div
-                  className={classNames(
-                    "message",
-                    message.from === "user" ? "sent" : "received"
-                  )}
-                  key={message.date}
-                >
-                  {message.text}
-                </div>
-              );
-            })}
-            <div className="inputWrap">
-              {recordDisplay}
-              <Search
-                placeholder="What's up?"
-                value={draft}
-                enterButton="Send"
-                size="large"
-                onChange={(e) => setDraft(e.value)}
-                onSearch={(value) => sendMessage(value)}
-              />
-            </div>
-          </div>
+          <Sidebar home />
+          <Messenger home />
         </>
       )}
       <Footer />
@@ -133,36 +49,16 @@ function Home({ homes }) {
           display: flex;
           flex-wrap: wrap;
         }
+      `}</style>
 
-        .sidebar {
-          min-height: 75vh;
-          width: 300px;
-          background: #f1f1f1;
-          border-radius: 10px;
-          padding: 2rem;
-          align-items: top;
-          margin-bottom: 2rem;
-        }
-
-        .contents {
-          position: relative;
-          padding: 2rem;
-          flex-grow: 1;
-          padding-bottom: 100px;
-        }
-
-        .inputWrap {
-          border-top: 1px solid #dedede;
-          background: #fff;
-          padding: 20px 0;
-          width: calc(100% - 4rem);
-          position: absolute;
-          bottom: 0;
-        }
-
-        input[type="text"] {
-          height: 2em;
-          line-height: px;
+      <style jsx global>{`
+        html,
+        body {
+          padding: 0;
+          margin: 0;
+          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+            sans-serif;
         }
 
         .mb-1 {
@@ -176,37 +72,6 @@ function Home({ homes }) {
         .btn--input {
           height: 2em;
           width: 100px;
-        }
-
-        p {
-          margin-top: 0;
-        }
-
-        .message {
-          max-width: 75%;
-          background: #e8f9f2;
-          padding: 10px;
-          border-radius: 8px;
-          margin-bottom: 10px;
-          margin-right: auto;
-          color: #444444;
-        }
-
-        .message.sent {
-          margin-right: 0;
-          margin-left: auto;
-          background: #eaeaea;
-        }
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
         }
 
         * {
