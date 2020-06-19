@@ -1,31 +1,47 @@
+import { Button, PageHeader, Tag } from "antd";
+import { useRouter } from "next/router";
+
 export default function Header({ user, loading }) {
+  const router = useRouter();
   return (
-    <>
-      <h1 className="title">
-        <img id="logo" src="/logo.png" />
-        Weekend
-      </h1>
-      {!loading &&
-        (user ? (
-          <li>
-            <a href="/api/logout">Logout</a>
-          </li>
-        ) : (
-          <li>
-            <a href="/api/login">Login</a>
-          </li>
-        ))}
+    <div className="header">
+      <PageHeader
+        style={{ width: "100%" }}
+        avatar={{ src: "/logo.png" }}
+        title="Weekend"
+        tags={<Tag color="green">Alpha</Tag>}
+        extra={
+          !loading && user ? (
+            <Button
+              key="1"
+              onClick={() => {
+                router.push("/api/logout");
+              }}
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              key="1"
+              onClick={() => {
+                router.push("/api/login");
+              }}
+            >
+              Login
+            </Button>
+          )
+        }
+      ></PageHeader>
       <style jsx>{`
-        .title {
+        .header {
           width: 100%;
+          border-bottom: 1px solid #eaeaea;
+          display: block;
+          float: clear;
+          justify-content: center;
           align-items: center;
         }
-        #logo {
-          height: 1em;
-          width: 1em;
-          margin-right: 1rem;
-        }
       `}</style>
-    </>
+    </div>
   );
 }
