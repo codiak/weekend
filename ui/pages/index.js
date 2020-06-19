@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Head from "next/head";
 import Header from "@components/Header";
 import Footer from "@components/Footer";
+import Record from "@components/Record";
 import classNames from "classnames";
 import { Button, Input } from "antd";
 import { gql } from "apollo-boost";
@@ -22,6 +23,7 @@ function Home({ homes }) {
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState([]);
   const [home] = useState(homes[0] || {});
+  var recordDisplay = "";
 
   // Jerry-rig kicking things off
   if (!home.name && messages.length === 0) {
@@ -31,6 +33,9 @@ function Home({ homes }) {
   async function sendMessage(text) {
     const res = await fetch("/api/message", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ message: text }),
     });
     if (res.ok) {
@@ -49,6 +54,18 @@ function Home({ homes }) {
     updatedMessages = updatedMessages.concat(messageObj);
     setMessages(updatedMessages);
     setDraft("");
+    if (process.browser && messageObj[1]) {
+      var synth = window.speechSynthesis;
+      var utterThis = new SpeechSynthesisUtterance(messageObj[1].text);
+      synth.speak(utterThis);
+    }
+  }
+
+  /* Only display record button client-side */
+  if (process.browser) {
+    recordDisplay = (
+      <Record pushNewMessages={(msgObj) => pushNewMessages(msgObj)} />
+    );
   }
 
   return (
@@ -94,6 +111,7 @@ function Home({ homes }) {
               );
             })}
             <div className="inputWrap">
+              {recordDisplay}
               <Search
                 placeholder="What's up?"
                 value={draft}
@@ -195,6 +213,10 @@ function Home({ homes }) {
           box-sizing: border-box;
         }
       `}</style>
+      <script src="/js/WebAudioRecorder.min.js"></script>
+      <script src="/js/WebAudioRecorderWav.min.js"></script>
+      <script src="/js/WebAudioRecorderMp3.min.js"></script>
+      <script src="/js/WebAudioRecorderOgg.min.js"></script>
     </main>
   );
 }
