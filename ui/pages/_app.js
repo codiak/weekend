@@ -1,13 +1,10 @@
-import App from 'next/app';
-import stylesheet from 'antd/dist/antd.min.css';
-
+import App from "next/app";
+import stylesheet from "antd/dist/antd.min.css";
 
 class Application extends App {
   render() {
     const { Component, pageProps } = this.props;
-    return (
-      <Component {...pageProps} />
-    );
+    return <Component {...pageProps} />;
   }
 }
 

@@ -1,12 +1,14 @@
 # package directories
 node_modules
 jspm_packages
+venv
 
 # Serverless directories
 .serverless
 .serverless_nextjs
 .env
 .next
+.python-version
 
 # Build folders
 /ui/build/

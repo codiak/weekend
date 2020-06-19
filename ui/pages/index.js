@@ -1,53 +1,54 @@
 import React, { useState } from "react";
-import Head from 'next/head'
-import Header from '@components/Header'
-import Footer from '@components/Footer'
-import classNames from 'classnames'
-import { Button, Input } from 'antd';
+import Head from "next/head";
+import Header from "@components/Header";
+import Footer from "@components/Footer";
+import classNames from "classnames";
+import { Button, Input } from "antd";
 import { gql } from "apollo-boost";
-import ApolloClient from 'apollo-boost';
+import ApolloClient from "apollo-boost";
+import { useFetchUser } from "libs/user";
 
 const client = new ApolloClient({
-  uri: 'http://ec2-52-86-111-85.compute-1.amazonaws.com:8080/v1/graphql',
+  uri: "http://ec2-52-86-111-85.compute-1.amazonaws.com:8080/v1/graphql",
   headers: {
-    'x-hasura-admin-secret': process.env.X_HASURA_ADMIN_SECRET
-  }
+    "x-hasura-admin-secret": process.env.X_HASURA_ADMIN_SECRET,
+  },
 });
 const { Search } = Input;
 
-
-function Home({homes}) {
+function Home({ homes }) {
+  const { user, loading } = useFetchUser();
   console.log(homes);
-  const [draft, setDraft] = useState('');
+  const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState([]);
   const [home] = useState(homes[0] || {});
 
   // Jerry-rig kicking things off
   if (!home.name && messages.length === 0) {
-    sendMessage('Get started!');
+    sendMessage("Get started!");
   }
 
   async function sendMessage(text) {
-    const res = await fetch('/api/message', {
-      method: 'POST',
-      body: JSON.stringify({message: text})
+    const res = await fetch("/api/message", {
+      method: "POST",
+      body: JSON.stringify({ message: text }),
     });
     if (res.ok) {
       let data = await res.json();
       pushNewMessages([
-        {'from': 'user', 'text': text, 'date': Date.now()},
-        {'from': 'weekend', 'text': data.reply, 'date': Date.now()}
+        { from: "user", text: text, date: Date.now() },
+        { from: "weekend", text: data.reply, date: Date.now() },
       ]);
     } else {
-      alert('Error sending message!');
+      alert("Error sending message!");
     }
   }
 
   function pushNewMessages(messageObj) {
-    let updatedMessages = messages.slice()
+    let updatedMessages = messages.slice();
     updatedMessages = updatedMessages.concat(messageObj);
     setMessages(updatedMessages);
-    setDraft('');
+    setDraft("");
   }
 
   return (
@@ -56,33 +57,55 @@ function Home({homes}) {
         <title>Weekend Home Maintenance</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header />
-      <div className="sidebar">
-        <div className="mb-1">
-          <Button type="primary">Assistant</Button>
-        </div>
-        <div className="mb-1">
-          <Button>{home.name || 'My House'}</Button>
-        </div>
-        <div className="mb-1">
-          <Button>Maintenance</Button>
-        </div>
-      </div>
-      <div className="contents">
-        {messages.map(message => {
-          return (<div className={classNames('message', message.from === 'user' ? 'sent':'received')} key={message.date}>
-            { message.text }
-          </div>)
-        })}
-        <div className="inputWrap">
-          <Search placeholder="What's up?"
-            value={draft}
-            enterButton="Send"
-            size="large"
-            onChange={e => setDraft(e.value)}
-            onSearch={value => sendMessage(value)}/>
-        </div>
-      </div>
+      <Header user={user} loading={loading} />
+      {loading && <p>Loading user information..</p>}
+
+      {!loading && !user && (
+        <>
+          <p>Please login</p>
+        </>
+      )}
+
+      {user && (
+        <>
+          <div className="sidebar">
+            <div className="mb-1">
+              <Button type="primary">Assistant</Button>
+            </div>
+            <div className="mb-1">
+              <Button>{home.name || "My House"}</Button>
+            </div>
+            <div className="mb-1">
+              <Button>Maintenance</Button>
+            </div>
+          </div>
+          <div className="contents">
+            {messages.map((message) => {
+              return (
+                <div
+                  className={classNames(
+                    "message",
+                    message.from === "user" ? "sent" : "received"
+                  )}
+                  key={message.date}
+                >
+                  {message.text}
+                </div>
+              );
+            })}
+            <div className="inputWrap">
+              <Search
+                placeholder="What's up?"
+                value={draft}
+                enterButton="Send"
+                size="large"
+                onChange={(e) => setDraft(e.value)}
+                onSearch={(value) => sendMessage(value)}
+              />
+            </div>
+          </div>
+        </>
+      )}
       <Footer />
 
       <style jsx>{`
@@ -111,10 +134,10 @@ function Home({homes}) {
         }
 
         .inputWrap {
-          border-top: 1px solid #DEDEDE;
+          border-top: 1px solid #dedede;
           background: #fff;
           padding: 20px 0;
-          width: calc(100% - 4rem); 
+          width: calc(100% - 4rem);
           position: absolute;
           bottom: 0;
         }
@@ -143,7 +166,7 @@ function Home({homes}) {
 
         .message {
           max-width: 75%;
-          background: #E8F9F2;
+          background: #e8f9f2;
           padding: 10px;
           border-radius: 8px;
           margin-bottom: 10px;
@@ -154,7 +177,7 @@ function Home({homes}) {
         .message.sent {
           margin-right: 0;
           margin-left: auto;
-          background: #EAEAEA;
+          background: #eaeaea;
         }
       `}</style>
 
@@ -173,29 +196,28 @@ function Home({homes}) {
         }
       `}</style>
     </main>
-  )
+  );
 }
 
 export async function getStaticProps(context) {
   let homes = [{ name: null }];
-  let {data} = await client
-    .query({
-      query: gql`
-        {
-          test_homes(where: {owner_name: {_eq: "cody"}}) {
-            id
-            name
-            owner_name
-            built_date
-          }
+  let { data } = await client.query({
+    query: gql`
+      {
+        test_homes(where: { owner_name: { _eq: "cody" } }) {
+          id
+          name
+          owner_name
+          built_date
         }
-      `
-    });
+      }
+    `,
+  });
   homes = data.test_homes;
 
   return {
     props: { homes },
-  }
+  };
 }
 
 export default Home;
