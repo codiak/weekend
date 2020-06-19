@@ -54,7 +54,7 @@ def handle_message(response):
         else:
             reply = "Okay"
     elif intent['name'] == 'greeting':
-        greetings = ['Hey! How is home?', 'Hello 👋', 'Hi!']
+        greetings = ['Hey! How is your home?', 'Hello 👋', 'Hi!']
         reply = random.choice(greetings)
     previous_intent = intent['name']
     return reply
