@@ -1,5 +1,6 @@
 import sys
 import random
+import os
 from wit import Wit
 from bottle import Bottle, request, route, run
 
@@ -65,9 +66,23 @@ def message_post():
     if message:
         response = client.message(message) # , context={'session_id':1}
         reply = handle_message(response)
-        return {'reply': reply}
+        return {'text': response.get('text'), 'reply': reply}
     else:
         return 'ERROR: "message" property required'
+
+
+@route('/speech', method='POST')
+def message_post():
+    audio = request.files.get('upload')
+    name, ext = os.path.splitext(audio.filename)
+    if ext != '.ogg':
+        return "File extension not allowed."
+    if audio:
+        response = client.speech(audio.file, {'Content-Type': 'audio/ogg'})
+        reply = handle_message(response)
+        return {'text': response.get('text'), 'reply': reply}
+    else:
+        return 'ERROR: audio file required'
 
 
 client = Wit(access_token=access_token)
