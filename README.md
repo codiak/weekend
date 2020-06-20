@@ -47,15 +47,8 @@ Instal requirements from /server:
 pip install -r requirements.txt
 ```
 
-To run the command prompt and send messages to Wit, use:
+To run the server for development, use:
 
 ```bash
-python /server/server.py WIT_TOKEN
+uvicorn main:app --reload
 ```
-
-And try a command like:
-
-```
-Remind me to stain the fence next week
-```
-
