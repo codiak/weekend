@@ -1,14 +1,5 @@
-import sys
 import random
-import os
-from wit import Wit
-from bottle import Bottle, request, route, run
 
-
-if len(sys.argv) != 2:
-    print('usage: python ' + sys.argv[0] + ' <wit-token>')
-    exit(1)
-access_token = sys.argv[1]
 
 def first_value(obj, key):
     if key not in obj:
@@ -56,39 +47,6 @@ def handle_message(response):
     elif intent['name'] == 'greeting':
         greetings = ['Hey! How is your home?', 'Hello 👋', 'Hi!']
         reply = random.choice(greetings)
-    previous_intent = intent['name']
+    # TODO: Save intent to session/user
+    # previous_intent = intent['name']
     return reply
-
-@route('/message', method='POST')
-def message_post():
-    body = request.json
-    message = body.get('message')
-    if message:
-        response = client.message(message) # , context={'session_id':1}
-        reply = handle_message(response)
-        return {'text': response.get('text'), 'reply': reply}
-    else:
-        return 'ERROR: "message" property required'
-
-
-@route('/speech', method='POST')
-def message_post():
-    audio = request.files.get('upload')
-    name, ext = os.path.splitext(audio.filename)
-    if ext != '.ogg':
-        return "File extension not allowed."
-    if audio:
-        response = client.speech(audio.file, {'Content-Type': 'audio/ogg'})
-        reply = handle_message(response)
-        return {'text': response.get('text'), 'reply': reply}
-    else:
-        return 'ERROR: audio file required'
-
-
-client = Wit(access_token=access_token)
-# client.interactive(handle_message=handle_message)
-
-
-if __name__ == '__main__':
-    # Run Server
-    run(host='localhost', port=3042, debug=True)

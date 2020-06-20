@@ -1,3 +1,4 @@
 # Server requirements
-bottle==0.12.18
 wit==5.1.0
+python-dotenv==0.13.0
+python-multipart==0.0.5
