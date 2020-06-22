@@ -65,6 +65,10 @@ function Home({ homes }) {
           margin-bottom: 1em;
         }
 
+        .ml-1 {
+          margin-left: 1em;
+        }
+
         .input--btn {
           width: calc(100% - 100px);
         }
