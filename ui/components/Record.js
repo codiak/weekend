@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { notification } from 'antd';
 
 var gumStream; //stream from getUserMedia()
 var recorder; 						//WebAudioRecorder object
@@ -15,6 +16,14 @@ if (process.browser) {
 
 export default function Record({ pushNewMessages }) {
   const [recordDisabled, setRecordDisabled] = useState(false);
+
+  const warningNotification = () => {
+    notification['warning']({
+      message: 'Unable To Hear You',
+      description:
+        'Please make sure you have allowed microphone access. When speaking to Wkend, click/tap and hold while talking, then release to send your message.',
+    });
+  };
 
   function startRecording() {
     console.log("startRecording() called");
@@ -95,45 +104,67 @@ export default function Record({ pushNewMessages }) {
         {'from': 'weekend', 'text': data.reply, 'date': Date.now()}
       ]);
     } else {
-      alert('Error sending message!');
+      warningNotification();
     }
   }
 
-  function createDownloadLink(blob, encoding) {
-    var url = URL.createObjectURL(blob);
-    var au = document.createElement('audio');
-    var li = document.createElement('li');
-    var link = document.createElement('a');
-
-    //add controls to the <audio> element
-    au.controls = true;
-    au.src = url;
-
-    //link the a element to the blob
-    link.href = url;
-    link.download = new Date().toISOString() + '.' + encoding;
-    link.innerHTML = link.download;
-
-    //add the new audio and a elements to the li element
-    li.appendChild(au);
-    li.appendChild(link);
-
-    //add the li element to the ordered list
-    recordingsList.appendChild(li);
-  }
-
   return (
-    <div>
-      <div id="controls">
-        <button id="recordButton" disabled={recordDisabled} onClick={(e) => startRecording(e)}>Record</button>
-        <button id="stopButton" disabled={!recordDisabled} onClick={(e) => stopRecording(e)}>Stop</button>
+    <>
+      <div id="controls" className="record-toggle">
+        <button onMouseDown={(e) => startRecording(e)}
+          onTouchStart={(e) => startRecording(e)}
+          onMouseUp={(e) => stopRecording(e)}
+          onTouchEnd={(e) => stopRecording(e)}
+          title="Click and hold to talk"
+          className={recordDisabled ? 'recording' : ''}>
+          <span role="img" aria-label="audio" class="anticon anticon-audio"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="audio" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M842 454c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8 0 140.3-113.7 254-254 254S258 594.3 258 454c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8 0 168.7 126.6 307.9 290 327.6V884H326.7c-13.7 0-24.7 14.3-24.7 32v36c0 4.4 2.8 8 6.2 8h407.6c3.4 0 6.2-3.6 6.2-8v-36c0-17.7-11-32-24.7-32H548V782.1c165.3-18 294-158 294-328.1zM512 624c93.9 0 170-75.2 170-168V232c0-92.8-76.1-168-170-168s-170 75.2-170 168v224c0 92.8 76.1 168 170 168zm-94-392c0-50.6 41.9-92 94-92s94 41.4 94 92v224c0 50.6-41.9 92-94 92s-94-41.4-94-92V232z"></path></svg></span>
+        </button>
       </div>
-      <div id="formats"></div>
-      <pre>Log</pre>
-      <pre id="log"></pre>
-
-      <pre>Recordings</pre>
-      <ol id="recordingsList"></ol>
-    </div>
+      <style jsx>{`
+          .record-toggle {
+            display: inline-block;
+          }
+          .record-toggle button {
+            border: 0px;
+            background: #fff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            font-size: 21px;
+            cursor: pointer;
+            padding-top: 3px;
+            color: #1890ff;
+          }
+          .record-toggle button:hover,
+          .record-toggle button:focus {
+            background: #e7856f;
+            color: #fff;
+          }
+          .record-toggle button.recording {
+            background: #e7856f;
+            color: #fff;
+          }
+          .record-toggle button.recording:before {
+            position: absolute;
+            width: calc(100% - 50px);
+            height: 100%;
+            top: 0px;
+            left: 0px;
+            font-size: 15px;
+            font-weight: bold;
+            content: 'Wkend is listening...';
+            color: #e7856f;
+            background: rgba(255,255,255,0.6);
+            display: block;
+            padding: 28px;
+          }
+      `}</style>
+      <style jsx global>{`
+          .inputWrap .ant-input-group-wrapper {
+            width: calc(100% - 50px) !important;
+          }
+      `}</style>
+    </>
   )
 }

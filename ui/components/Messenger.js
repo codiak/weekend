@@ -72,7 +72,6 @@ export default function Messenger({home}) {
               );
             })}
             <div className="inputWrap">
-              {recordDisplay}
               <Search
                 placeholder="What's up?"
                 value={draft}
@@ -81,6 +80,7 @@ export default function Messenger({home}) {
                 onChange={(e) => setDraft(e.value)}
                 onSearch={(value) => sendMessage(value)}
               />
+              {recordDisplay}
             </div>
           </div>
           <style jsx>{`
