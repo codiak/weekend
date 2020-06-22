@@ -91,7 +91,7 @@ export async function getStaticProps(context) {
   let { data } = await client.query({
     query: gql`
       {
-        test_homes(where: { owner_name: { _eq: "cody" } }) {
+        homes(where: { owner_name: { _eq: "cody" } }) {
           id
           name
           owner_name
@@ -100,7 +100,19 @@ export async function getStaticProps(context) {
       }
     `,
   });
-  homes = data.test_homes;
+
+  // let { datatwo } = await client.mutate({
+  //   mutation: gql`
+  //     {
+  //       insert_one_homes(objects: {name: "New Home", owner_name: "cody"}) {
+  //         id
+  //       }
+  //     }
+  //   `,
+  // });
+  // console.log(datatwo);
+
+  homes = data.homes;
 
   return {
     props: { homes },
