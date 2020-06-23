@@ -15,6 +15,11 @@ class TextMessage(BaseModel):
     message: str
 
 
+@app.get('/health')
+async def health_check():
+    return 'Looking Good'
+
+
 @app.post('/message')
 async def message_post(message: TextMessage):
     if message:
