@@ -5,13 +5,16 @@ export default function Sidebar({home}) {
     <>
       <div className="sidebar">
         <div className="mb-1">
-          <Button type="primary">Assistant</Button>
+          <Button href="/" type="primary">Assistant</Button>
         </div>
         <div className="mb-1">
-          <Button>{home.name || "My House"}</Button>
+          <Button href="/homes">My Homes</Button>
         </div>
         <div className="mb-1">
-          <Button>Maintenance</Button>
+          <Button href="">Tasks</Button>
+        </div>
+        <div className="mb-1">
+          <Button href="/home/1">{home.name || "My House"}</Button>
         </div>
       </div>
       <style jsx global>{`
@@ -24,7 +27,7 @@ export default function Sidebar({home}) {
             margin-bottom: 2rem;
           }
 
-        .sidebar button {
+        .sidebar a {
           width: 100%;
           border-radius: 0px;
           text-align: left;

@@ -41,47 +41,6 @@ function Home({ homes }) {
         </>
       )}
       <Footer />
-
-      <style jsx>{`
-        .container {
-          margin: 0 auto;
-          max-width: 1000px;
-          display: flex;
-          flex-wrap: wrap;
-        }
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-
-        .mb-1 {
-          margin-bottom: 1em;
-        }
-
-        .ml-1 {
-          margin-left: 1em;
-        }
-
-        .input--btn {
-          width: calc(100% - 100px);
-        }
-
-        .btn--input {
-          height: 2em;
-          width: 100px;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
       <script src="/js/WebAudioRecorder.min.js"></script>
       <script src="/js/WebAudioRecorderWav.min.js"></script>
       <script src="/js/WebAudioRecorderMp3.min.js"></script>
@@ -105,16 +64,40 @@ export async function getStaticProps(context) {
     `,
   });
 
-  // let { datatwo } = await client.mutate({
+  const ADD_ITEM = gql`
+    mutation AddItemToWorkspace(
+      $object: workspace_items_insert_input! = {
+        doi: ""
+        type: ""
+        url: ""
+        workspace_uuid: ""
+        }
+    ) {
+      insert_workspace_items_one(object: $object) {
+        doi
+        type
+        display_data
+        url
+        artstor_id
+      }
+    }
+  `;
+
+  // objects: {name: "New Home", owner_name: "cody"}
+
+  // let thing = await client.mutate({
   //   mutation: gql`
-  //     {
-  //       insert_one_homes(objects: {name: "New Home", owner_name: "cody"}) {
+  //     mutation MyMutation ( $object: homes_insert_input! = {name: "", owner_name: ""} ) {
+  //       insert_one_homes(object: $object) {
   //         id
   //       }
   //     }
   //   `,
+  //   variables: {
+  //     object: {name: "New Home", owner_name: "cody"}
+  //   }
   // });
-  // console.log(datatwo);
+  // console.log(thing.data);
 
   homes = data.homes;
 

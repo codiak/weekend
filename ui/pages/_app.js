@@ -1,5 +1,6 @@
 import App from "next/app";
 import stylesheet from "antd/dist/antd.min.css";
+import "../style.css";
 
 class Application extends App {
   render() {
