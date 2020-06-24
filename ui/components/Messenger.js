@@ -17,6 +17,8 @@ export default function Messenger({home}) {
   useEffect(() => {
     if (process.browser && !home.name && messages.length === 0) {
       sendMessage("Get started!");
+    } else if (home.name && messages.length === 0) {
+      pushNewMessages([{from: "weekend", text: "Hello!", date: Date.now() }]);
     }
   }, [home]);
 

@@ -5,20 +5,17 @@ import Footer from "@components/Footer";
 import Messenger from "@components/Messenger";
 import Sidebar from "@components/Sidebar";
 import { gql } from "apollo-boost";
-import ApolloClient from "apollo-boost";
 import { useFetchUser } from "libs/user";
 import { Spin } from 'antd';
-
-const client = new ApolloClient({
-  uri: "http://ec2-52-86-111-85.compute-1.amazonaws.com:8080/v1/graphql",
-  headers: {
-    "x-hasura-admin-secret": process.env.X_HASURA_ADMIN_SECRET,
-  },
-});
+import { client } from "libs/apollo";
 
 function Home({ homes }) {
   const { user, loading } = useFetchUser();
   const [home] = useState(homes[0] || {});
+
+  if (process.browser) {
+    window.__user = user;
+  }
 
   return (
     <main className="container">
@@ -37,8 +34,8 @@ function Home({ homes }) {
 
       {user && (
         <>
-          <Sidebar home />
-          <Messenger home />
+          <Sidebar home={home} />
+          <Messenger home={home} />
         </>
       )}
       <Footer />
