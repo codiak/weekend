@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Input } from "antd";
+import React, { useState, useEffect } from "react";
+import { Input, notification } from "antd";
 import classNames from "classnames";
 import Record from "@components/Record";
 import { Tag } from 'antd';
@@ -14,10 +14,20 @@ export default function Messenger({home}) {
 
   var recordDisplay = "";
 
-  // Jerry-rig kicking things off
-  if (process.browser && !home.name && messages.length === 0) {
-    sendMessage("Get started!");
-  }
+  useEffect(() => {
+    if (process.browser && !home.name && messages.length === 0) {
+      sendMessage("Get started!");
+    } else if (home.name && messages.length === 0) {
+      pushNewMessages([{from: "weekend", text: "Hello!", date: Date.now() }]);
+    }
+  }, [home]);
+
+  function toastNotify() {
+    notification['warning']({
+      message: 'Unable to Send Message',
+      description: 'Please try again, or make sure you have have a stable connection.',
+    });
+  };
 
   async function sendMessage(text) {
     const res = await fetch("/proxy/message", {
@@ -34,7 +44,7 @@ export default function Messenger({home}) {
         { from: "weekend", text: data.reply, date: Date.now() },
       ]);
     } else {
-      alert("Error sending message!");
+      toastNotify();
     }
   }
 

@@ -19,4 +19,7 @@ venv
 *.swp
 .venv
 .lambda
-function.zip
+*.zip
+
+# Random Bits
+.DS_Store

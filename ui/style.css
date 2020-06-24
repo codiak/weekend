@@ -7,6 +7,10 @@ body {
     sans-serif;
 }
 
+.mt-1 {
+  margin-top: 1em;
+}
+
 .mb-1 {
   margin-bottom: 1em;
 }
@@ -33,4 +37,9 @@ body {
   max-width: 1000px;
   display: flex;
   flex-wrap: wrap;
+}
+
+.container > p {
+  margin: 2em auto;
+  font-size: 16px;
 }

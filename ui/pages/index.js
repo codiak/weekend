@@ -5,19 +5,17 @@ import Footer from "@components/Footer";
 import Messenger from "@components/Messenger";
 import Sidebar from "@components/Sidebar";
 import { gql } from "apollo-boost";
-import ApolloClient from "apollo-boost";
 import { useFetchUser } from "libs/user";
-
-const client = new ApolloClient({
-  uri: "http://ec2-52-86-111-85.compute-1.amazonaws.com:8080/v1/graphql",
-  headers: {
-    "x-hasura-admin-secret": process.env.X_HASURA_ADMIN_SECRET,
-  },
-});
+import { Spin } from 'antd';
+import { client } from "libs/apollo";
 
 function Home({ homes }) {
   const { user, loading } = useFetchUser();
   const [home] = useState(homes[0] || {});
+
+  if (process.browser) {
+    window.__user = user;
+  }
 
   return (
     <main className="container">
@@ -26,7 +24,7 @@ function Home({ homes }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header user={user} loading={loading} />
-      {loading && <p>Loading user information..</p>}
+      {loading && <p><Spin />&nbsp;Loading user information...</p>}
 
       {!loading && !user && (
         <>
@@ -36,8 +34,8 @@ function Home({ homes }) {
 
       {user && (
         <>
-          <Sidebar home />
-          <Messenger home />
+          <Sidebar home={home} />
+          <Messenger home={home} />
         </>
       )}
       <Footer />
@@ -64,24 +62,24 @@ export async function getStaticProps(context) {
     `,
   });
 
-  const ADD_ITEM = gql`
-    mutation AddItemToWorkspace(
-      $object: workspace_items_insert_input! = {
-        doi: ""
-        type: ""
-        url: ""
-        workspace_uuid: ""
-        }
-    ) {
-      insert_workspace_items_one(object: $object) {
-        doi
-        type
-        display_data
-        url
-        artstor_id
-      }
-    }
-  `;
+  // const ADD_ITEM = gql`
+  //   mutation AddItemToWorkspace(
+  //     $object: workspace_items_insert_input! = {
+  //       doi: ""
+  //       type: ""
+  //       url: ""
+  //       workspace_uuid: ""
+  //       }
+  //   ) {
+  //     insert_workspace_items_one(object: $object) {
+  //       doi
+  //       type
+  //       display_data
+  //       url
+  //       artstor_id
+  //     }
+  //   }
+  // `;
 
   // objects: {name: "New Home", owner_name: "cody"}
 
