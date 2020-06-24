@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input } from "antd";
+import { Input, notification } from "antd";
 import classNames from "classnames";
 import Record from "@components/Record";
 import { Tag } from 'antd';
@@ -19,6 +19,13 @@ export default function Messenger({home}) {
     sendMessage("Get started!");
   }
 
+  function toastNotify() {
+    notification['warning']({
+      message: 'Unable to Send Message',
+      description: 'Please try again, or make sure you have have a stable connection.',
+    });
+  };
+
   async function sendMessage(text) {
     const res = await fetch("/proxy/message", {
       method: "POST",
@@ -34,7 +41,7 @@ export default function Messenger({home}) {
         { from: "weekend", text: data.reply, date: Date.now() },
       ]);
     } else {
-      alert("Error sending message!");
+      toastNotify();
     }
   }
 

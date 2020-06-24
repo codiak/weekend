@@ -1,21 +1,30 @@
 import { Button } from "antd";
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 export default function Sidebar({home}) {
+  const router = useRouter();
+
+  function isActive(path) {
+    if (router.pathname === path) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   return (
     <>
       <div className="sidebar">
-        <div className="mb-1">
-          <Button href="/" type="primary">Assistant</Button>
-        </div>
-        <div className="mb-1">
-          <Button href="/homes">My Homes</Button>
-        </div>
-        <div className="mb-1">
-          <Button href="">Tasks</Button>
-        </div>
-        <div className="mb-1">
-          <Button href="/home/1">{home.name || "My House"}</Button>
-        </div>
+        <Link href="/" passHref>
+          <Button type={isActive("/") ? "primary" : ""}>Assistant</Button>
+        </Link>
+        <Link href="/homes" passHref>
+          <Button type={isActive("/homes") ? "primary" : ""}>My Home</Button>
+        </Link>
+        <Link href="/logs" passHref>
+          <Button type={isActive("/logs") ? "primary" : ""}>Maintenance Log</Button>
+        </Link>
       </div>
       <style jsx global>{`
         .sidebar {
@@ -27,7 +36,7 @@ export default function Sidebar({home}) {
             margin-bottom: 2rem;
           }
 
-        .sidebar a {
+        .sidebar .ant-btn {
           width: 100%;
           border-radius: 0px;
           text-align: left;
@@ -35,7 +44,8 @@ export default function Sidebar({home}) {
           background: #fff;
           padding: 1px;
           height: 3em;
-          margin-top: 1em;
+          margin-top: 2em;
+          font-weight: 500;
         }
 
         .sidebar .ant-btn-primary {

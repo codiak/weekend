@@ -33,7 +33,7 @@ Open [http://localhost:3000](http://localhost:3000)
 If you have serverless configured simple run:
 
 ```bash
-serverless
+serverless --component=wkendNext
 ```
 
 In the /ui folder.
