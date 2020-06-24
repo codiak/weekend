@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, notification } from "antd";
 import classNames from "classnames";
 import Record from "@components/Record";
@@ -14,10 +14,11 @@ export default function Messenger({home}) {
 
   var recordDisplay = "";
 
-  // Jerry-rig kicking things off
-  if (process.browser && !home.name && messages.length === 0) {
-    sendMessage("Get started!");
-  }
+  useEffect(() => {
+    if (process.browser && !home.name && messages.length === 0) {
+      sendMessage("Get started!");
+    }
+  }, [home]);
 
   function toastNotify() {
     notification['warning']({
