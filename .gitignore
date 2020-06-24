@@ -17,3 +17,6 @@ venv
 *.egg-info
 *.swo
 *.swp
+.venv
+.lambda
+function.zip
