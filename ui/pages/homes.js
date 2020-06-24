@@ -45,7 +45,7 @@ const HomeList = ({homes}) => {
   );
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   let homes = [{ name: null }];
   let { data } = await client.query({
     query: gql`

@@ -69,7 +69,7 @@ const Logs = ({task_log, tasks}) => {
   );
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   let tasks = [];
   let task_log = [];
   let { data } = await client.query({
