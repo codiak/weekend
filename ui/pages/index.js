@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Header from "@components/Header";
 import Footer from "@components/Footer";
@@ -16,6 +16,22 @@ function Home({ homes }) {
   if (process.browser) {
     window.__user = user;
   }
+
+  useEffect(() => {
+    let { data } = await client.query({
+      query: gql`
+        {
+          homes(where: { owner_name: { _eq: "cody" } }) {
+            id
+            name
+            owner_name
+            built_date
+          }
+        }
+      `,
+    });
+    setHome(data.homes[0] || {});
+  }, [homes]);
 
   return (
     <main className="container">
@@ -49,18 +65,18 @@ function Home({ homes }) {
 
 export async function getServerSideProps(context) {
   let homes = [{ name: null }];
-  let { data } = await client.query({
-    query: gql`
-      {
-        homes(where: { owner_name: { _eq: "cody" } }) {
-          id
-          name
-          owner_name
-          built_date
-        }
-      }
-    `,
-  });
+  // let { data } = await client.query({
+  //   query: gql`
+  //     {
+  //       homes(where: { owner_name: { _eq: "cody" } }) {
+  //         id
+  //         name
+  //         owner_name
+  //         built_date
+  //       }
+  //     }
+  //   `,
+  // });
 
   // const ADD_ITEM = gql`
   //   mutation AddItemToWorkspace(
@@ -97,7 +113,7 @@ export async function getServerSideProps(context) {
   // });
   // console.log(thing.data);
 
-  homes = data.homes;
+  // homes = data.homes;
 
   return {
     props: { homes },
