@@ -23,3 +23,5 @@ venv
 
 # Random Bits
 .DS_Store
+
+.vercel

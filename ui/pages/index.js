@@ -4,10 +4,10 @@ import Header from "@components/Header";
 import Footer from "@components/Footer";
 import Messenger from "@components/Messenger";
 import Sidebar from "@components/Sidebar";
-import gql from 'graphql-tag';
+// import gql from 'graphql-tag';
 import { useFetchUser } from "libs/user";
 import { Spin } from 'antd';
-import { client } from "libs/apollo";
+// import { client } from "libs/apollo";
 
 function Home({ homes }) {
   const { user, loading } = useFetchUser();
@@ -49,18 +49,18 @@ function Home({ homes }) {
 
 export async function getServerSideProps(context) {
   let homes = [{ name: null }];
-  let { data } = await client.query({
-    query: gql`
-      {
-        homes(where: { owner_name: { _eq: "cody" } }) {
-          id
-          name
-          owner_name
-          built_date
-        }
-      }
-    `,
-  });
+  // let { data } = await client.query({
+  //   query: gql`
+  //     {
+  //       homes(where: { owner_name: { _eq: "cody" } }) {
+  //         id
+  //         name
+  //         owner_name
+  //         built_date
+  //       }
+  //     }
+  //   `,
+  // });
 
   // const ADD_ITEM = gql`
   //   mutation AddItemToWorkspace(
@@ -97,7 +97,7 @@ export async function getServerSideProps(context) {
   // });
   // console.log(thing.data);
 
-  homes = data.homes;
+  // homes = data.homes;
 
   return {
     props: { homes },
