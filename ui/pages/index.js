@@ -50,21 +50,23 @@ function Home({ homes }) {
 export async function getServerSideProps(context) {
   let homes = [{ name: null }];
   try {
-    let { data } = await client.query({
-      query: gql`
-        {
-          homes(where: { owner_name: { _eq: "cody" } }) {
-            id
-            name
-            owner_name
-            built_date
-          }
-        }
-      `,
-    });
-    if (data && data.homes) {
-      homes = data.homes;
-    }
+    // let { data } = await client.query({
+    //   query: gql`
+    //     {
+    //       homes(where: { owner_name: { _eq: "cody" } }) {
+    //         id
+    //         name
+    //         owner_name
+    //         built_date
+    //       }
+    //     }
+    //   `,
+    // });
+    // if (data && data.homes) {
+    //   homes = data.homes;
+    // }
+    let data = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+    console.log(data);
   } catch(err) {
     console.log(err);
   }
