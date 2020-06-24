@@ -49,18 +49,25 @@ function Home({ homes }) {
 
 export async function getServerSideProps(context) {
   let homes = [{ name: null }];
-  let { data } = await client.query({
-    query: gql`
-      {
-        homes(where: { owner_name: { _eq: "cody" } }) {
-          id
-          name
-          owner_name
-          built_date
+  try {
+    let { data } = await client.query({
+      query: gql`
+        {
+          homes(where: { owner_name: { _eq: "cody" } }) {
+            id
+            name
+            owner_name
+            built_date
+          }
         }
-      }
-    `,
-  });
+      `,
+    });
+    if (data && data.homes) {
+      homes = data.homes;
+    }
+  } catch(err) {
+    console.log(err);
+  }
 
   // const ADD_ITEM = gql`
   //   mutation AddItemToWorkspace(
@@ -96,8 +103,6 @@ export async function getServerSideProps(context) {
   //   }
   // });
   // console.log(thing.data);
-
-  homes = data.homes;
 
   return {
     props: { homes },
