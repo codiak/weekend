@@ -4,7 +4,7 @@ const next = require('next')
 
 const apiProxy = {
   '/proxy': {
-    target: 'http://localhost:8000',
+    target: process.env.API_URL || 'http://localhost:8000',
     pathRewrite: { '^/proxy': '/' },
     changeOrigin: true,
   },

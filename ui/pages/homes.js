@@ -25,7 +25,7 @@ const HomeList = ({homes}) => {
       {user && (
         <>
           <Sidebar />
-          <div>
+          <div className="contents">
             {homes.map((home) => {
               return (<Descriptions title={home.name} bordered>
                 <Descriptions.Item label="Year Built">{home.built_date || 'Unknown'}</Descriptions.Item>

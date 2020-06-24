@@ -29,6 +29,7 @@ const Logs = ({task_log, tasks}) => {
   }];
   const completed = task_log.map((log_item) => {
     let task = { ...log_item, ...tasks.find(t => t.id === log_item.task_id)};
+    task.completed_on = new Date(task.completed_on).toDateString()
     return task;
   });
 
@@ -49,7 +50,7 @@ const Logs = ({task_log, tasks}) => {
       {user && (
         <>
           <Sidebar />
-          <div className="mt-1">
+          <div className="contents">
             <h2>Maintenance Log</h2>
             <Table dataSource={completed} columns={logColumns} />
             <h2>Recurring Tasks</h2>

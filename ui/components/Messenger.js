@@ -105,14 +105,6 @@ export default function Messenger({home}) {
             </div>
           </div>
           <style jsx>{`
-            .contents {
-              position: relative;
-              padding: 2rem;
-              display: flex;
-              flex-grow: 1;
-              padding-bottom: 100px;
-              flex-flow: column wrap;
-            }
 
             .inputWrap {
               border-top: 1px solid #dedede;
