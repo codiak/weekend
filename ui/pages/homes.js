@@ -4,7 +4,7 @@ import Header from "@components/Header";
 import Footer from "@components/Footer";
 import Sidebar from "@components/Sidebar";
 import { useFetchUser } from "libs/user";
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 import { client } from "libs/apollo";
 
 const HomeList = ({homes}) => {

@@ -4,7 +4,7 @@ import Header from "@components/Header";
 import Footer from "@components/Footer";
 import Messenger from "@components/Messenger";
 import Sidebar from "@components/Sidebar";
-import { gql } from "apollo-boost";
+import gql from 'graphql-tag';
 import { useFetchUser } from "libs/user";
 import { Spin } from 'antd';
 import { client } from "libs/apollo";
