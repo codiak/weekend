@@ -17,6 +17,9 @@ venv
 *.egg-info
 *.swo
 *.swp
+.venv
+.lambda
+*.zip
 
 # Random Bits
 .DS_Store
