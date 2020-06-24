@@ -8,7 +8,7 @@ export default function Header({ user, loading }) {
       <PageHeader
         style={{ width: "100%" }}
         avatar={{ src: "/logo.png" }}
-        title="Weekend"
+        title="Wkend"
         tags={<Tag color="green">Alpha</Tag>}
         extra={
           !loading && user ? (

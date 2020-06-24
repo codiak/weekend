@@ -21,7 +21,7 @@ def handle_message(response):
     traits = response.get('traits',[])
     entities = response['entities']
     intent = list_get(intents, 0)
-    task = first_value(entities, 'house_task:house_task')
+    task = first_value(entities, 'home_task:home_task')
     date = first_value(entities, 'wit$datetime:datetime')
     sentiment = first_value(traits, 'wit$sentiment')
     address = first_value(entities, 'wit$location:location')
@@ -43,7 +43,10 @@ def handle_message(response):
         if sentiment == 'negative':
             reply = "Oh, sorry!"
         else:
-            reply = "Okay"
+            reply = "Okay, great."
+    elif intent['name'] == 'add_home_attributes':
+        # TODO: Save home attributes
+        reply = "Thanks for telling me more about your home, I'll save that information for reference."
     elif intent['name'] == 'greeting':
         greetings = ['Hey! How is your home?', 'Hello 👋', 'Hi!']
         reply = random.choice(greetings)

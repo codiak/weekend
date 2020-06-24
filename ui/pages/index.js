@@ -20,7 +20,7 @@ function Home({ homes }) {
   return (
     <main className="container">
       <Head>
-        <title>Weekend Home Maintenance</title>
+        <title>Wkend Home Maintenance</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header user={user} loading={loading} />

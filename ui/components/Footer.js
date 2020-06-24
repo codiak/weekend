@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <>
       <footer>
-        Weekend 2020
+        Wkend 2020
       </footer>
       <style jsx>{`
         footer {
