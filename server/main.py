@@ -1,10 +1,12 @@
+import os
+
 from fastapi import FastAPI, File, UploadFile
 from pydantic import BaseModel
 from wit import Wit
 from mangum import Mangum
 from dotenv import load_dotenv
+
 from handle_message import handle_message
-import os
 
 load_dotenv()
 app = FastAPI()

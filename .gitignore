@@ -9,6 +9,7 @@ venv
 .env
 .next
 .python-version
+.env.*
 
 # Build folders
 /ui/build/

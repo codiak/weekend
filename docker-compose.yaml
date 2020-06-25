@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  hasura:
+    image: "hasura/graphql-engine"
+    container_name: "hasura"
+    environment:
+      - HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL}
+      - HASURA_GRAPHQL_ENABLE_CONSOLE=${HASURA_GRAPHQL_ENABLE_CONSOLE}
+      - HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
+    ports:
+      - "8802:8080"
+  backend:
+    build: ./server
+    image: wkend-py
+    container_name: fastapi
+    ports:
+      - "8801:8000"
+  frontend:
+    build: .
+    image: wkend-nextjs
+    container_name: nextjs
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+      - hasura
