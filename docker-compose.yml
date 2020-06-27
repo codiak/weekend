@@ -16,7 +16,7 @@ services:
     ports:
       - "8801:8000"
   frontend:
-    build: .
+    build: ./ui
     image: wkend-nextjs
     container_name: nextjs
     ports:
