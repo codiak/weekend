@@ -17,7 +17,7 @@ python -m venv ${VIRT_ENV}
 wait
 
 source ${VIRT_ENV}/bin/activate
-pip install -r requirements
+pip install -r requirements.txt
 wait
 
 echo "Packaging up environment"
