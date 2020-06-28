@@ -15,7 +15,7 @@ services:
     ports:
       - "8080:8080"
   backend:
-    image: "015376519742.dkr.ecr.us-east-1.amazonaws.com/wkend-fastapi-py:0.1"
+    image: "015376519742.dkr.ecr.us-east-1.amazonaws.com/wkend-fastapi-py"
     logging:
       driver: "awslogs"
       options:
@@ -25,7 +25,7 @@ services:
     ports:
       - "8000:8000"
   frontend:
-    image: "015376519742.dkr.ecr.us-east-1.amazonaws.com/wkend-next-js:0.2"
+    image: "015376519742.dkr.ecr.us-east-1.amazonaws.com/wkend-next-js"
     logging:
       driver: "awslogs"
       options:
@@ -37,8 +37,8 @@ services:
     environment:
       - API_URL="http://localhost:8000"
       - HASURA_URL="http://localhost:8080"
-      - REDIRECT_URL="http://test.wkend.work/api/auth0-callback"
-      - POST_LOGOUT_REDIRECT_URI="http://test.wkend.work"
+      - REDIRECT_URL=http://test.wkend.work/api/auth0-callback
+      - POST_LOGOUT_REDIRECT_URI=http://test.wkend.work
   nginx:
     image: "015376519742.dkr.ecr.us-east-1.amazonaws.com/wkend-nginx"
     logging:
