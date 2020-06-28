@@ -35,8 +35,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - API_URL="http://localhost:8000"
-      - HASURA_URL="http://localhost:8080"
+      - API_URL=http://localhost:8000
+      - HASURA_URL=http://localhost:8080
       - REDIRECT_URL=http://test.wkend.work/api/auth0-callback
       - POST_LOGOUT_REDIRECT_URI=http://test.wkend.work
   nginx:
