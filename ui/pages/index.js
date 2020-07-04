@@ -13,6 +13,8 @@ function Home({ homes }) {
   const { user, loading } = useFetchUser();
   const [home] = useState(homes[0] || {});
 
+  console.log('User', user);
+
   if (process.browser) {
     window.__user = user;
   }

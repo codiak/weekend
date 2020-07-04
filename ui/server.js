@@ -18,6 +18,25 @@ const app = next({
   dev,
 })
 
+const { initAuth0 } = require("@auth0/nextjs-auth0");
+let auth0 = initAuth0({
+  domain: process.env.AUTH0_DOMAIN,
+  clientId: process.env.AUTH0_CLIENT_ID,
+  clientSecret: process.env.AUTH0_CLIENT_SECRET,
+  scope: "openid profile",
+  redirectUri:
+    process.env.REDIRECT_URL || "http://localhost:3000/api/auth0-callback",
+  postLogoutRedirectUri:
+    process.env.POST_LOGOUT_REDIRECT_URI || "http://localhost:3000/",
+  session: {
+    cookieSecret: process.env.SESSION_COOKIE_SECRET,
+    cookieLifetime: process.env.SESSION_COOKIE_LIFETIME,
+    storeIdToken: true,
+    // storeAccessToken: true,
+  },
+});
+
+
 const nextRouteHandler = app.getRequestHandler()
 
 let server
@@ -25,6 +44,25 @@ app
   .prepare()
   .then(() => {
     server = express()
+
+
+    // Provide auth for proxied API calls
+    server.use('/proxy', async function (req, res, next) {
+      console.log('Request Type:', req.method)
+      try {
+        const session = await auth0.getSession(req);
+        console.log(session);
+        // const tokenCache = await auth0.tokenCache(req, res);
+        // const { accessToken } = await tokenCache.getAccessToken();
+
+        // const apiClient = new MyApiClient(accessToken);
+        // return apiClient.getCustomers();
+      } catch (error) {
+        console.error(error);
+        res.status(error.status || 500).end(error.message);
+      }
+      next()
+    })
 
     // Set up the proxy.
     const proxyMiddleware = require('http-proxy-middleware')
