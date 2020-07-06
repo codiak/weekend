@@ -51,12 +51,10 @@ app
       console.log('Request Type:', req.method)
       try {
         const session = await auth0.getSession(req);
-        console.log(session);
-        // const tokenCache = await auth0.tokenCache(req, res);
-        // const { accessToken } = await tokenCache.getAccessToken();
-
-        // const apiClient = new MyApiClient(accessToken);
-        // return apiClient.getCustomers();
+        const idToken = session.idToken;
+        // Attach JWT header
+        req.headers['authorization'] = idToken;
+        console.log("did set?", req.headers);
       } catch (error) {
         console.error(error);
         res.status(error.status || 500).end(error.message);
