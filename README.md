@@ -36,7 +36,7 @@ If you have serverless configured simple run:
 serverless --component=wkendNext
 ```
 
-In the /ui folder.
+From the /ui folder.
 
 
 ## Running the Server
