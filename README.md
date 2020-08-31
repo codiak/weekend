@@ -1,4 +1,4 @@
-# Weekend
+# Wkend
 
 Simple Next and Python apps to get us off the ground.
 
