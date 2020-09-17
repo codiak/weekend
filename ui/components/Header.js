@@ -1,8 +1,11 @@
 import { Button, PageHeader, Tag } from "antd";
 import { useRouter } from "next/router";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Header({ user, loading }) {
   const router = useRouter();
+  const { loginWithRedirect, logout } = useAuth0();
+
   return (
     <div className="header">
       <PageHeader
@@ -16,9 +19,7 @@ export default function Header({ user, loading }) {
               <b>{user.name}</b>
               <Button
                 key="1"
-                onClick={() => {
-                  router.push("/api/logout");
-                }}
+                onClick={() => logout({ returnTo: window.location.origin })}
               >
                 Logout
               </Button>
@@ -26,9 +27,7 @@ export default function Header({ user, loading }) {
           ) : (
             <Button
               key="1"
-              onClick={() => {
-                router.push("/api/login");
-              }}
+              onClick={() => loginWithRedirect()}
             >
               Login
             </Button>

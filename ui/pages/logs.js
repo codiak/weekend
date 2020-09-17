@@ -2,7 +2,7 @@ import Head from "next/head";
 import Header from "@components/Header";
 import Footer from "@components/Footer";
 import Sidebar from "@components/Sidebar";
-import { useFetchUser } from "libs/user";
+import { useAuth0 } from "@auth0/auth0-react";
 import gql from 'graphql-tag';
 import { client } from "libs/apollo";
 import { Table } from 'antd';
@@ -12,7 +12,7 @@ const Logs = () => {
   const task_log = [];
   const tasks = [];
 
-  const { user, loading } = useFetchUser();
+  const { user, isLoading } = useAuth0();
   const logColumns = [{
     title: 'Task',
     dataIndex: 'name',
@@ -45,8 +45,8 @@ const Logs = () => {
         <title>Wkend | Homes</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header user={user} loading={loading} />
-      {!loading && !user && (
+      <Header user={user} loading={isLoading} />
+      {!isLoading && !user && (
         <>
           <p>Please login</p>
         </>

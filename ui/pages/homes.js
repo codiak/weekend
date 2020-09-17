@@ -3,12 +3,12 @@ import { Descriptions } from 'antd';
 import Header from "@components/Header";
 import Footer from "@components/Footer";
 import Sidebar from "@components/Sidebar";
-import { useFetchUser } from "libs/user";
+import { useAuth0 } from "@auth0/auth0-react";
 import gql from 'graphql-tag';
 import { client } from "libs/apollo";
 
 const HomeList = () => {
-  const { user, loading } = useFetchUser();
+  const { user, isAuthenticated, isLoading } = useAuth0();
   const homes = [];
 
   return (
@@ -17,8 +17,8 @@ const HomeList = () => {
         <title>Wkend | My Home</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header user={user} loading={loading} />
-      {!loading && !user && (
+      <Header user={user} loading={isLoading} />
+      {!isLoading && !user && (
         <>
           <p>Please login</p>
         </>
