@@ -7,7 +7,11 @@ import gql from 'graphql-tag';
 import { client } from "libs/apollo";
 import { Table } from 'antd';
 
-const Logs = ({task_log, tasks}) => {
+const Logs = () => {
+  // TODO: fetch tasks
+  task_log = [];
+  tasks = [];
+
   const { user, loading } = useFetchUser();
   const logColumns = [{
     title: 'Task',
@@ -67,32 +71,6 @@ const Logs = ({task_log, tasks}) => {
       </style>
     </main>
   );
-}
-
-export async function getServerSideProps(context) {
-  let tasks = [];
-  let task_log = [];
-  let { data } = await client.query({
-    query: gql`
-      {
-        task_log(where: { owner_id: { _eq: "a5eca2c4-8534-4100-8b8a-49f90a1b6c8f" } }) {
-          task_id,
-          home_id,
-          completed_on
-        }
-        tasks(where: { owner_id: { _eq: "a5eca2c4-8534-4100-8b8a-49f90a1b6c8f" } }) {
-          name,
-          id
-        }
-      }
-    `,
-  });
-  task_log = data.task_log;
-  tasks = data.tasks;
-
-  return {
-    props: { task_log, tasks },
-  };
 }
 
 export default Logs

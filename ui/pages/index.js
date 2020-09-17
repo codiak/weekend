@@ -9,8 +9,10 @@ import { useFetchUser } from "libs/user";
 import { Spin } from 'antd';
 import { client } from "libs/apollo";
 
-function Home({ homes }) {
+function Home() {
   const { user, loading } = useFetchUser();
+  // TODO: fetch homes
+  const homes = [];
   const [home] = useState(homes[0] || {});
 
   if (process.browser) {
@@ -45,68 +47,6 @@ function Home({ homes }) {
       <script src="/js/WebAudioRecorderOgg.min.js"></script>
     </main>
   );
-}
-
-export async function getServerSideProps(context) {
-  let homes = [{ name: null }];
-  try {
-    let { data } = await client.query({
-      query: gql`
-        {
-          homes(where: { owner_name: { _eq: "cody" } }) {
-            id
-            name
-            owner_name
-            built_date
-          }
-        }
-      `,
-    });
-    if (data && data.homes) {
-      homes = data.homes;
-    }
-  } catch(err) {
-    console.log(err);
-  }
-
-  // const ADD_ITEM = gql`
-  //   mutation AddItemToWorkspace(
-  //     $object: workspace_items_insert_input! = {
-  //       doi: ""
-  //       type: ""
-  //       url: ""
-  //       workspace_uuid: ""
-  //       }
-  //   ) {
-  //     insert_workspace_items_one(object: $object) {
-  //       doi
-  //       type
-  //       display_data
-  //       url
-  //       artstor_id
-  //     }
-  //   }
-  // `;
-
-  // objects: {name: "New Home", owner_name: "cody"}
-
-  // let thing = await client.mutate({
-  //   mutation: gql`
-  //     mutation MyMutation ( $object: homes_insert_input! = {name: "", owner_name: ""} ) {
-  //       insert_one_homes(object: $object) {
-  //         id
-  //       }
-  //     }
-  //   `,
-  //   variables: {
-  //     object: {name: "New Home", owner_name: "cody"}
-  //   }
-  // });
-  // console.log(thing.data);
-
-  return {
-    props: { homes },
-  };
 }
 
 export default Home;

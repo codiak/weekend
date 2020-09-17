@@ -7,8 +7,9 @@ import { useFetchUser } from "libs/user";
 import gql from 'graphql-tag';
 import { client } from "libs/apollo";
 
-const HomeList = ({homes}) => {
+const HomeList = () => {
   const { user, loading } = useFetchUser();
+  const homes = [];
 
   return (
     <main className="container">
@@ -43,27 +44,6 @@ const HomeList = ({homes}) => {
       </style>
     </main>
   );
-}
-
-export async function getServerSideProps(context) {
-  let homes = [{ name: null }];
-  let { data } = await client.query({
-    query: gql`
-      {
-        homes(where: { owner_name: { _eq: "cody" } }) {
-          id
-          name
-          owner_name
-          built_date
-        }
-      }
-    `,
-  });
-  homes = data.homes;
-
-  return {
-    props: { homes },
-  };
 }
 
 export default HomeList
