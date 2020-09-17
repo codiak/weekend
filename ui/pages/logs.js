@@ -9,8 +9,8 @@ import { Table } from 'antd';
 
 const Logs = () => {
   // TODO: fetch tasks
-  task_log = [];
-  tasks = [];
+  const task_log = [];
+  const tasks = [];
 
   const { user, loading } = useFetchUser();
   const logColumns = [{
