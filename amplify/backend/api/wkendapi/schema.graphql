@@ -1,0 +1,80 @@
+type Home @model {
+  id: ID!
+  name: String
+  address: String!
+  city: String!
+  state: String!
+  zip: String!
+  purchaseDate: AWSDate
+  purchasePrice: Float
+  tasks: [Task] @connection(keyName: "byHouse", fields: ["id"])
+}
+
+type Task @model @key(name: "byHouse", fields: ["houseID"]) {
+  id: ID!
+  name: String!
+  description: String
+  frequency: Int!
+
+  houseID: ID!
+  house: Home @connection(fields: ["houseID"])
+  vendorHistory: [VendorHistory] @connection(keyName: "byTask", fields: ["id"])
+  tools: [Tool] @connection(keyName: "byTask", fields: ["id"])
+  consumableUsage: [ConsumableUsage]
+  @connection(keyName: "byTask", fields: ["id"])
+}
+
+type VendorHistory @model @key(name: "byTask", fields: ["taskID"]) {
+  id: ID!
+  taskID: ID!
+  task: Task @connection(fields: ["taskID"])
+  vendorID: ID!
+  vendor: Vendor @connection(fields: ["vendorID"])
+
+  satisfaction: Int!
+  dateOfService: AWSDate
+  duration: Int!
+  comment: String
+}
+
+type Vendor @model {
+  id: ID!
+
+  name: String!
+  address: String
+  city: String
+  state: String
+  zip: String
+  phone: AWSPhone
+  email: AWSEmail
+}
+
+type Tool @model @key(name: "byTask", fields: ["taskID", "name"]) {
+  id: ID!
+  taskID: ID!
+  task: Task @connection(fields: ["taskID"])
+
+  name: String!
+  purchaseDate: AWSDate
+  purchasePrice: Float
+}
+
+type Consumable @model {
+  id: ID!
+  name: String!
+  description: String
+  amount: Float
+  pricePerUnit: Float
+}
+
+type ConsumableUsage @model @key(name: "byTask", fields: ["taskID", "name"]) {
+  id: ID!
+  consumableUsageID: ID!
+  taskID: ID!
+  task: Task @connection(fields: ["taskID"])
+  consumableID: ID!
+  consumable: Consumable @connection(fields: ["consumableID"])
+
+  name: String!
+  usageAmt: Float!
+}

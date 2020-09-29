@@ -1,0 +1,612 @@
+type Home {
+  id: ID!
+  name: String
+  address: String!
+  city: String!
+  state: String!
+  zip: String!
+  purchaseDate: AWSDate
+  purchasePrice: Float
+  tasks(filter: ModelTaskFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelTaskConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Task {
+  id: ID!
+  name: String!
+  description: String
+  frequency: Int!
+  houseID: ID!
+  house: Home
+  vendorHistory(filter: ModelVendorHistoryFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelVendorHistoryConnection
+  tools(name: ModelStringKeyConditionInput, filter: ModelToolFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelToolConnection
+  consumableUsage(name: ModelStringKeyConditionInput, filter: ModelConsumableUsageFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelConsumableUsageConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type VendorHistory {
+  id: ID!
+  taskID: ID!
+  task: Task
+  vendorID: ID!
+  vendor: Vendor
+  satisfaction: Int!
+  dateOfService: AWSDate
+  duration: Int!
+  comment: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Vendor {
+  id: ID!
+  name: String!
+  address: String
+  city: String
+  state: String
+  zip: String
+  phone: AWSPhone
+  email: AWSEmail
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Tool {
+  id: ID!
+  taskID: ID!
+  task: Task
+  name: String!
+  purchaseDate: AWSDate
+  purchasePrice: Float
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Consumable {
+  id: ID!
+  name: String!
+  description: String
+  amount: Float
+  pricePerUnit: Float
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type ConsumableUsage {
+  id: ID!
+  consumableUsageID: ID!
+  taskID: ID!
+  task: Task
+  consumableID: ID!
+  consumable: Consumable
+  name: String!
+  usageAmt: Float!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelHomeConnection {
+  items: [Home]
+  nextToken: String
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+input ModelHomeFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  address: ModelStringInput
+  city: ModelStringInput
+  state: ModelStringInput
+  zip: ModelStringInput
+  purchaseDate: ModelStringInput
+  purchasePrice: ModelFloatInput
+  and: [ModelHomeFilterInput]
+  or: [ModelHomeFilterInput]
+  not: ModelHomeFilterInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+type Query {
+  getHome(id: ID!): Home
+  listHomes(filter: ModelHomeFilterInput, limit: Int, nextToken: String): ModelHomeConnection
+  getTask(id: ID!): Task
+  listTasks(filter: ModelTaskFilterInput, limit: Int, nextToken: String): ModelTaskConnection
+  getVendorHistory(id: ID!): VendorHistory
+  listVendorHistorys(filter: ModelVendorHistoryFilterInput, limit: Int, nextToken: String): ModelVendorHistoryConnection
+  getVendor(id: ID!): Vendor
+  listVendors(filter: ModelVendorFilterInput, limit: Int, nextToken: String): ModelVendorConnection
+  getTool(id: ID!): Tool
+  listTools(filter: ModelToolFilterInput, limit: Int, nextToken: String): ModelToolConnection
+  getConsumable(id: ID!): Consumable
+  listConsumables(filter: ModelConsumableFilterInput, limit: Int, nextToken: String): ModelConsumableConnection
+  getConsumableUsage(id: ID!): ConsumableUsage
+  listConsumableUsages(filter: ModelConsumableUsageFilterInput, limit: Int, nextToken: String): ModelConsumableUsageConnection
+}
+
+input CreateHomeInput {
+  id: ID
+  name: String
+  address: String!
+  city: String!
+  state: String!
+  zip: String!
+  purchaseDate: AWSDate
+  purchasePrice: Float
+}
+
+input UpdateHomeInput {
+  id: ID!
+  name: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  purchaseDate: AWSDate
+  purchasePrice: Float
+}
+
+input DeleteHomeInput {
+  id: ID
+}
+
+type Mutation {
+  createHome(input: CreateHomeInput!, condition: ModelHomeConditionInput): Home
+  updateHome(input: UpdateHomeInput!, condition: ModelHomeConditionInput): Home
+  deleteHome(input: DeleteHomeInput!, condition: ModelHomeConditionInput): Home
+  createTask(input: CreateTaskInput!, condition: ModelTaskConditionInput): Task
+  updateTask(input: UpdateTaskInput!, condition: ModelTaskConditionInput): Task
+  deleteTask(input: DeleteTaskInput!, condition: ModelTaskConditionInput): Task
+  createVendorHistory(input: CreateVendorHistoryInput!, condition: ModelVendorHistoryConditionInput): VendorHistory
+  updateVendorHistory(input: UpdateVendorHistoryInput!, condition: ModelVendorHistoryConditionInput): VendorHistory
+  deleteVendorHistory(input: DeleteVendorHistoryInput!, condition: ModelVendorHistoryConditionInput): VendorHistory
+  createVendor(input: CreateVendorInput!, condition: ModelVendorConditionInput): Vendor
+  updateVendor(input: UpdateVendorInput!, condition: ModelVendorConditionInput): Vendor
+  deleteVendor(input: DeleteVendorInput!, condition: ModelVendorConditionInput): Vendor
+  createTool(input: CreateToolInput!, condition: ModelToolConditionInput): Tool
+  updateTool(input: UpdateToolInput!, condition: ModelToolConditionInput): Tool
+  deleteTool(input: DeleteToolInput!, condition: ModelToolConditionInput): Tool
+  createConsumable(input: CreateConsumableInput!, condition: ModelConsumableConditionInput): Consumable
+  updateConsumable(input: UpdateConsumableInput!, condition: ModelConsumableConditionInput): Consumable
+  deleteConsumable(input: DeleteConsumableInput!, condition: ModelConsumableConditionInput): Consumable
+  createConsumableUsage(input: CreateConsumableUsageInput!, condition: ModelConsumableUsageConditionInput): ConsumableUsage
+  updateConsumableUsage(input: UpdateConsumableUsageInput!, condition: ModelConsumableUsageConditionInput): ConsumableUsage
+  deleteConsumableUsage(input: DeleteConsumableUsageInput!, condition: ModelConsumableUsageConditionInput): ConsumableUsage
+}
+
+input ModelHomeConditionInput {
+  name: ModelStringInput
+  address: ModelStringInput
+  city: ModelStringInput
+  state: ModelStringInput
+  zip: ModelStringInput
+  purchaseDate: ModelStringInput
+  purchasePrice: ModelFloatInput
+  and: [ModelHomeConditionInput]
+  or: [ModelHomeConditionInput]
+  not: ModelHomeConditionInput
+}
+
+type Subscription {
+  onCreateHome: Home @aws_subscribe(mutations: ["createHome"])
+  onUpdateHome: Home @aws_subscribe(mutations: ["updateHome"])
+  onDeleteHome: Home @aws_subscribe(mutations: ["deleteHome"])
+  onCreateTask: Task @aws_subscribe(mutations: ["createTask"])
+  onUpdateTask: Task @aws_subscribe(mutations: ["updateTask"])
+  onDeleteTask: Task @aws_subscribe(mutations: ["deleteTask"])
+  onCreateVendorHistory: VendorHistory @aws_subscribe(mutations: ["createVendorHistory"])
+  onUpdateVendorHistory: VendorHistory @aws_subscribe(mutations: ["updateVendorHistory"])
+  onDeleteVendorHistory: VendorHistory @aws_subscribe(mutations: ["deleteVendorHistory"])
+  onCreateVendor: Vendor @aws_subscribe(mutations: ["createVendor"])
+  onUpdateVendor: Vendor @aws_subscribe(mutations: ["updateVendor"])
+  onDeleteVendor: Vendor @aws_subscribe(mutations: ["deleteVendor"])
+  onCreateTool: Tool @aws_subscribe(mutations: ["createTool"])
+  onUpdateTool: Tool @aws_subscribe(mutations: ["updateTool"])
+  onDeleteTool: Tool @aws_subscribe(mutations: ["deleteTool"])
+  onCreateConsumable: Consumable @aws_subscribe(mutations: ["createConsumable"])
+  onUpdateConsumable: Consumable @aws_subscribe(mutations: ["updateConsumable"])
+  onDeleteConsumable: Consumable @aws_subscribe(mutations: ["deleteConsumable"])
+  onCreateConsumableUsage: ConsumableUsage @aws_subscribe(mutations: ["createConsumableUsage"])
+  onUpdateConsumableUsage: ConsumableUsage @aws_subscribe(mutations: ["updateConsumableUsage"])
+  onDeleteConsumableUsage: ConsumableUsage @aws_subscribe(mutations: ["deleteConsumableUsage"])
+}
+
+type ModelTaskConnection {
+  items: [Task]
+  nextToken: String
+}
+
+input ModelTaskFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  description: ModelStringInput
+  frequency: ModelIntInput
+  houseID: ModelIDInput
+  and: [ModelTaskFilterInput]
+  or: [ModelTaskFilterInput]
+  not: ModelTaskFilterInput
+}
+
+input CreateTaskInput {
+  id: ID
+  name: String!
+  description: String
+  frequency: Int!
+  houseID: ID!
+}
+
+input UpdateTaskInput {
+  id: ID!
+  name: String
+  description: String
+  frequency: Int
+  houseID: ID
+}
+
+input DeleteTaskInput {
+  id: ID
+}
+
+input ModelTaskConditionInput {
+  name: ModelStringInput
+  description: ModelStringInput
+  frequency: ModelIntInput
+  houseID: ModelIDInput
+  and: [ModelTaskConditionInput]
+  or: [ModelTaskConditionInput]
+  not: ModelTaskConditionInput
+}
+
+type ModelVendorHistoryConnection {
+  items: [VendorHistory]
+  nextToken: String
+}
+
+input ModelVendorHistoryFilterInput {
+  id: ModelIDInput
+  taskID: ModelIDInput
+  vendorID: ModelIDInput
+  satisfaction: ModelIntInput
+  dateOfService: ModelStringInput
+  duration: ModelIntInput
+  comment: ModelStringInput
+  and: [ModelVendorHistoryFilterInput]
+  or: [ModelVendorHistoryFilterInput]
+  not: ModelVendorHistoryFilterInput
+}
+
+input CreateVendorHistoryInput {
+  id: ID
+  taskID: ID!
+  vendorID: ID!
+  satisfaction: Int!
+  dateOfService: AWSDate
+  duration: Int!
+  comment: String
+}
+
+input UpdateVendorHistoryInput {
+  id: ID!
+  taskID: ID
+  vendorID: ID
+  satisfaction: Int
+  dateOfService: AWSDate
+  duration: Int
+  comment: String
+}
+
+input DeleteVendorHistoryInput {
+  id: ID
+}
+
+input ModelVendorHistoryConditionInput {
+  taskID: ModelIDInput
+  vendorID: ModelIDInput
+  satisfaction: ModelIntInput
+  dateOfService: ModelStringInput
+  duration: ModelIntInput
+  comment: ModelStringInput
+  and: [ModelVendorHistoryConditionInput]
+  or: [ModelVendorHistoryConditionInput]
+  not: ModelVendorHistoryConditionInput
+}
+
+type ModelVendorConnection {
+  items: [Vendor]
+  nextToken: String
+}
+
+input ModelVendorFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  address: ModelStringInput
+  city: ModelStringInput
+  state: ModelStringInput
+  zip: ModelStringInput
+  phone: ModelStringInput
+  email: ModelStringInput
+  and: [ModelVendorFilterInput]
+  or: [ModelVendorFilterInput]
+  not: ModelVendorFilterInput
+}
+
+input CreateVendorInput {
+  id: ID
+  name: String!
+  address: String
+  city: String
+  state: String
+  zip: String
+  phone: AWSPhone
+  email: AWSEmail
+}
+
+input UpdateVendorInput {
+  id: ID!
+  name: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  phone: AWSPhone
+  email: AWSEmail
+}
+
+input DeleteVendorInput {
+  id: ID
+}
+
+input ModelVendorConditionInput {
+  name: ModelStringInput
+  address: ModelStringInput
+  city: ModelStringInput
+  state: ModelStringInput
+  zip: ModelStringInput
+  phone: ModelStringInput
+  email: ModelStringInput
+  and: [ModelVendorConditionInput]
+  or: [ModelVendorConditionInput]
+  not: ModelVendorConditionInput
+}
+
+type ModelToolConnection {
+  items: [Tool]
+  nextToken: String
+}
+
+input ModelToolFilterInput {
+  id: ModelIDInput
+  taskID: ModelIDInput
+  name: ModelStringInput
+  purchaseDate: ModelStringInput
+  purchasePrice: ModelFloatInput
+  and: [ModelToolFilterInput]
+  or: [ModelToolFilterInput]
+  not: ModelToolFilterInput
+}
+
+input CreateToolInput {
+  id: ID
+  taskID: ID!
+  name: String!
+  purchaseDate: AWSDate
+  purchasePrice: Float
+}
+
+input UpdateToolInput {
+  id: ID!
+  taskID: ID
+  name: String
+  purchaseDate: AWSDate
+  purchasePrice: Float
+}
+
+input DeleteToolInput {
+  id: ID
+}
+
+input ModelToolConditionInput {
+  taskID: ModelIDInput
+  name: ModelStringInput
+  purchaseDate: ModelStringInput
+  purchasePrice: ModelFloatInput
+  and: [ModelToolConditionInput]
+  or: [ModelToolConditionInput]
+  not: ModelToolConditionInput
+}
+
+type ModelConsumableConnection {
+  items: [Consumable]
+  nextToken: String
+}
+
+input ModelConsumableFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  description: ModelStringInput
+  amount: ModelFloatInput
+  pricePerUnit: ModelFloatInput
+  and: [ModelConsumableFilterInput]
+  or: [ModelConsumableFilterInput]
+  not: ModelConsumableFilterInput
+}
+
+input CreateConsumableInput {
+  id: ID
+  name: String!
+  description: String
+  amount: Float
+  pricePerUnit: Float
+}
+
+input UpdateConsumableInput {
+  id: ID!
+  name: String
+  description: String
+  amount: Float
+  pricePerUnit: Float
+}
+
+input DeleteConsumableInput {
+  id: ID
+}
+
+input ModelConsumableConditionInput {
+  name: ModelStringInput
+  description: ModelStringInput
+  amount: ModelFloatInput
+  pricePerUnit: ModelFloatInput
+  and: [ModelConsumableConditionInput]
+  or: [ModelConsumableConditionInput]
+  not: ModelConsumableConditionInput
+}
+
+type ModelConsumableUsageConnection {
+  items: [ConsumableUsage]
+  nextToken: String
+}
+
+input ModelConsumableUsageFilterInput {
+  id: ModelIDInput
+  consumableUsageID: ModelIDInput
+  taskID: ModelIDInput
+  consumableID: ModelIDInput
+  name: ModelStringInput
+  usageAmt: ModelFloatInput
+  and: [ModelConsumableUsageFilterInput]
+  or: [ModelConsumableUsageFilterInput]
+  not: ModelConsumableUsageFilterInput
+}
+
+input CreateConsumableUsageInput {
+  id: ID
+  consumableUsageID: ID!
+  taskID: ID!
+  consumableID: ID!
+  name: String!
+  usageAmt: Float!
+}
+
+input UpdateConsumableUsageInput {
+  id: ID!
+  consumableUsageID: ID
+  taskID: ID
+  consumableID: ID
+  name: String
+  usageAmt: Float
+}
+
+input DeleteConsumableUsageInput {
+  id: ID
+}
+
+input ModelConsumableUsageConditionInput {
+  consumableUsageID: ModelIDInput
+  taskID: ModelIDInput
+  consumableID: ModelIDInput
+  name: ModelStringInput
+  usageAmt: ModelFloatInput
+  and: [ModelConsumableUsageConditionInput]
+  or: [ModelConsumableUsageConditionInput]
+  not: ModelConsumableUsageConditionInput
+}
+
+input ModelStringKeyConditionInput {
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  between: [String]
+  beginsWith: String
+}

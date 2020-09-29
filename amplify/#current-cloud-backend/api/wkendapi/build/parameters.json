@@ -1,0 +1,8 @@
+{
+    "CreateAPIKey": 1,
+    "AppSyncApiName": "wkendapi",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "S3DeploymentBucket": "amplify-amplifywkend-dev-205108-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/78a81d858d2605290bf13c108296298d2b7d4d60"
+}
