@@ -4,16 +4,26 @@ import Header from "@components/Header";
 import Footer from "@components/Footer";
 import Messenger from "@components/Messenger";
 import Sidebar from "@components/Sidebar";
-import gql from 'graphql-tag';
 import { useAuth0 } from "@auth0/auth0-react";
 import { Spin } from 'antd';
-import { client } from "libs/apollo";
+import Amplify, { API, graphqlOperation } from 'aws-amplify'
+import { listHomes } from '../graphql/queries';
+import awsmobile from "../aws-exports";
+
+Amplify.configure(awsmobile);
 
 function Home() {
   const { user, isLoading } = useAuth0();
   // TODO: fetch homes
-  const homes = [];
-  const [home] = useState(homes[0] || {});
+  // const homes = [];
+  const [home] = useState({}); //homes[0] || 
+  let homes = API.graphql(graphqlOperation(listHomes)).then(data => {
+    console.log('graph?', data);
+    return data;
+  });
+  //   alert(JSON.stringify(homes));
+  // };
+  console.log(homes);
 
   if (process.browser) {
     window.__user = user;

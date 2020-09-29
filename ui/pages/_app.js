@@ -2,7 +2,10 @@ import App from "next/app";
 import stylesheet from "antd/dist/antd.min.css";
 import "../style.css";
 import { Auth0Provider } from "@auth0/auth0-react";
+import awsmobile from "../aws-exports";
+import Amplify from 'aws-amplify'
 
+Amplify.configure(awsmobile);
 
 class Application extends App {
   render() {
